@@ -14,7 +14,8 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        //
+        $marcas = Marca::orderBy('id', 'asc')->paginate(20);
+        return $marcas;
     }
 
     /**
@@ -36,7 +37,7 @@ class MarcaController extends Controller
      */
     public function show(Marca $marca)
     {
-        //
+        return $marca;
     }
 
     /**
