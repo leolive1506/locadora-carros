@@ -15,3 +15,16 @@ Route::apiResources([
     'cliente' => ClienteController::class
 ]);
 ```
+
+# URL, URN, URI
+- URL (Uniform Resource Locator)
+    - host onde está o recurso
+    - Ex: leonardosantana.com.br
+
+- URN (Uniform Resource Name)
+    - Recurso dentro do host
+    - Ex: /api/vagas
+
+- URI (Uniform Resource Identifier)
+    - Combinação protocolo + url + urn
+    - Ex: https://leonardosantana.com.br/api/vagas
