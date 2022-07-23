@@ -61,6 +61,8 @@ class MarcaController extends Controller
      */
     public function destroy(Marca $marca)
     {
-        //
+        $nameMarca = $marca->nome;
+        $marca->delete();
+        return ['message' => 'Marca ' . $nameMarca . ' removida com sucesso'];
     }
 }
