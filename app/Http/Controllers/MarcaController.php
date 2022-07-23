@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class MarcaController extends Controller
 {
+    private $marca;
+
+    public function __construct(Marca $marca)
+    {
+        $this->marca = $marca;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +20,7 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        $marcas = Marca::orderBy('id', 'asc')->paginate(20);
+        $marcas = $this->marca::orderBy('id', 'asc')->paginate(20);
         return $marcas;
     }
 
@@ -26,29 +32,30 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
-        return Marca::create($request->all());
+        return $this->marca::create($request->all());
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Marca  $marca
+     * @param  integer $marca_id
      * @return \Illuminate\Http\Response
      */
-    public function show(Marca $marca)
+    public function show($marca_id)
     {
-        return $marca;
+        return $this->marca->findOrFail($marca_id);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Marca  $marca
+     * @param  integer  $marca_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Marca $marca)
+    public function update(Request $request, $marca_id)
     {
+        $marca = $this->marca->findOrFail($marca_id);
         $marca->update($request->all());
         return $marca;
     }
@@ -56,11 +63,12 @@ class MarcaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Marca  $marca
+     * @param  integer  $marca_id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Marca $marca)
+    public function destroy($marca_id)
     {
+        $marca = $this->marca->findOrFail($marca_id);
         $nameMarca = $marca->nome;
         $marca->delete();
         return ['message' => 'Marca ' . $nameMarca . ' removida com sucesso'];
