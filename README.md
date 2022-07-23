@@ -7,3 +7,11 @@ art make:model -mcr Marca
 art make:model --all NameModel
 art make:model -a NameModel
 ```
+
+# Rotas
+```php
+// nao inclui rotas create e edit
+Route::apiResources([
+    'cliente' => ClienteController::class
+]);
+```
