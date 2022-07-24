@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MarcaRequest;
 use App\Models\Marca;
-use Illuminate\Http\Request;
 
 class MarcaController extends Controller
 {
@@ -27,10 +27,10 @@ class MarcaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\MarcaRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MarcaRequest $request)
     {
         return $this->marca::create($request->all());
     }
@@ -49,11 +49,11 @@ class MarcaController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\MarcaRequest  $request
      * @param  integer  $marca_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $marca_id)
+    public function update(MarcaRequest $request, $marca_id)
     {
         $marca = $this->marca->findOrFail($marca_id);
         $marca->update($request->all());
