@@ -27,14 +27,4 @@ class Marca extends Model
             'imagem.required' => 'A imagem não pode ser nula',
         ];
     }
-
-    public function attributes()
-    {
-        return $this;
-    }
-
-    public function model()
-    {
-        return $this;
-    }
 }
