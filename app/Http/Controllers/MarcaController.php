@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MarcaRequest;
 use App\Models\Marca;
-use Exception;
-use Illuminate\Support\Facades\Storage;
-use PhpParser\Node\Expr;
+use App\Services\Storage\StorageService;
 
 class MarcaController extends Controller
 {
@@ -36,7 +34,7 @@ class MarcaController extends Controller
     public function store(MarcaRequest $request)
     {
         $data = $request->all();
-        $data['imagem'] = $request->file('imagem')->store('imagens', 'public');
+        $data['imagem'] = $request->file('imagem')->store('imagens/marcas', 'public');
 
         return $this->marca::create($data);
     }
@@ -65,8 +63,8 @@ class MarcaController extends Controller
         $data = $request->all();
 
         if (! empty($data['imagem'])) {
-            $data['imagem'] = $request->file('imagem')->store('imagens', 'public');
-            $this->deleteImage($marca->imagem);
+            $data['imagem'] = $request->file('imagem')->store('imagens/marcas', 'public');
+            StorageService::delete($marca->imagem);
         }
 
         $marca->update($data);
@@ -84,18 +82,9 @@ class MarcaController extends Controller
         $marca = $this->marca->findOrFail($marca_id);
         $nameMarca = $marca->nome;
 
-        $this->deleteImage($marca->imagem);
+        StorageService::delete($marca->imagem);
         $marca->delete();
 
         return ['message' => 'Marca ' . $nameMarca . ' removida com sucesso'];
-    }
-
-    private function deleteImage($path)
-    {
-        try {
-            Storage::disk('public')->delete($path);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'error delete', 'exception' => $e]);
-        }
     }
 }

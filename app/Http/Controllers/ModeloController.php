@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ModeloRequest;
 use App\Models\Modelo;
+use App\Services\Storage\StorageService;
 use Illuminate\Http\Request;
 
 class ModeloController extends Controller
 {
+    public function __construct(Modelo $modelo)
+    {
+        $this->modelo = $modelo;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,72 +21,70 @@ class ModeloController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $modelos = $this->modelo::with('marca')->orderBy('id', 'desc')->paginate(20);
+        return $modelos;
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\ModeloRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ModeloRequest $request)
     {
-        //
+        $data = $request->all();
+        $data['imagem'] = $request->file('imagem')->store('imagens/modelos', 'public');
+
+        return $this->modelo::create($data);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Modelo  $modelo
+     * @param  integer $modelo_id
      * @return \Illuminate\Http\Response
      */
-    public function show(Modelo $modelo)
+    public function show($modelo_id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Modelo  $modelo
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Modelo $modelo)
-    {
-        //
+        return $this->modelo->with('marca')->findOrFail($modelo_id);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Modelo  $modelo
+     * @param  \App\Http\Requests\ModeloRequest  $request
+     * @param  integer  $modelo_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Modelo $modelo)
+    public function update(ModeloRequest $request, $modelo_id)
     {
-        //
+        $modelo = $this->modelo->findOrFail($modelo_id);
+        $data = $request->all();
+
+        if (! empty($data['imagem'])) {
+            $data['imagem'] = $request->file('imagem')->store('imagens/modelos', 'public');
+            StorageService::delete($modelo->imagem);
+        }
+
+        $modelo->update($data);
+        return $modelo;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Modelo  $modelo
+     * @param  integer  $modelo_id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Modelo $modelo)
+    public function destroy(int $modelo_id)
     {
-        //
+        $modelo = $this->modelo->findOrFail($modelo_id);
+        $namemodelo = $modelo->nome;
+
+        StorageService::delete($modelo->imagem);
+        $modelo->delete();
+
+        return ['message' => 'Modelo ' . $namemodelo . ' removido com sucesso'];
     }
 }

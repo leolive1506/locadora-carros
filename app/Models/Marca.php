@@ -11,11 +11,11 @@ class Marca extends Model
     protected $table = 'marcas';
     protected $fillable = ['nome', 'imagem'];
 
-    public static function rules(int $marcaId = null)
+    public static function rules(int $marca_id = null)
     {
         return [
-            'nome' => 'required|string|unique:marcas,nome,' . $marcaId .'|max:140',
-            'imagem' => $marcaId ? 'nullable' : 'required' . '|file|mimes:png,jpg,jpeg'
+            'nome' => 'required|string|unique:marcas,nome,' . $marca_id .'|max:140',
+            'imagem' => $marca_id ? 'nullable' : 'required' . '|file|mimes:png,jpg,jpeg'
         ];
     }
 
@@ -26,5 +26,10 @@ class Marca extends Model
             'nome.unique' => 'Essa marca já existe',
             'imagem.required' => 'A imagem não pode ser nula',
         ];
+    }
+
+    public function modelos()
+    {
+        return $this->hasMany(Modelo::class, 'marca_id');
     }
 }
