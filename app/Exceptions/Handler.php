@@ -3,7 +3,10 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -54,7 +57,21 @@ class Handler extends ExceptionHandler
                 'status' => Response::HTTP_NOT_FOUND,
                 'message' => Response::$statusTexts[Response::HTTP_NOT_FOUND],
                 'info' => 'Endpoint or register not found',
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
+        });
+
+        $this->renderable(function (ValidationException $e, $request) {
+            return response()->json([
+                'status' => $e->status,
+                'errors' => $e->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        });
+
+        $this->renderable(function (AccessDeniedHttpException $e, $request) {
+            return response()->json([
+                'status' => Response::HTTP_FORBIDDEN,
+                'message' => 'This action is unauthorized',
+            ], Response::HTTP_FORBIDDEN);
         });
     }
 }
