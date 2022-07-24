@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MarcaRequest;
 use App\Models\Marca;
+use Exception;
+use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Expr;
 
 class MarcaController extends Controller
 {
@@ -20,7 +23,7 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        $marcas = $this->marca::orderBy('id', 'asc')->paginate(20);
+        $marcas = $this->marca::orderBy('id', 'desc')->paginate(20);
         return $marcas;
     }
 
@@ -32,7 +35,10 @@ class MarcaController extends Controller
      */
     public function store(MarcaRequest $request)
     {
-        return $this->marca::create($request->all());
+        $data = $request->all();
+        $data['imagem'] = $request->file('imagem')->store('imagens', 'public');
+
+        return $this->marca::create($data);
     }
 
     /**
@@ -56,7 +62,14 @@ class MarcaController extends Controller
     public function update(MarcaRequest $request, $marca_id)
     {
         $marca = $this->marca->findOrFail($marca_id);
-        $marca->update($request->all());
+        $data = $request->all();
+
+        if (! empty($data['imagem'])) {
+            $data['imagem'] = $request->file('imagem')->store('imagens', 'public');
+            $this->deleteImage($marca->imagem);
+        }
+
+        $marca->update($data);
         return $marca;
     }
 
@@ -66,11 +79,23 @@ class MarcaController extends Controller
      * @param  integer  $marca_id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($marca_id)
+    public function destroy(int $marca_id)
     {
         $marca = $this->marca->findOrFail($marca_id);
         $nameMarca = $marca->nome;
+
+        $this->deleteImage($marca->imagem);
         $marca->delete();
+
         return ['message' => 'Marca ' . $nameMarca . ' removida com sucesso'];
+    }
+
+    private function deleteImage($path)
+    {
+        try {
+            Storage::disk('public')->delete($path);
+        } catch (Exception $e) {
+            return response()->json(['message' => 'error delete', 'exception' => $e]);
+        }
     }
 }

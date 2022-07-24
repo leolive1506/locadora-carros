@@ -28,3 +28,9 @@ Route::apiResources([
 - URI (Uniform Resource Identifier)
     - Combinação protocolo + url + urn
     - Ex: https://leonardosantana.com.br/api/vagas
+
+
+# Put, Patch
+- Quando tiver form-data
+    - Inputs Não são reconhecidos no framework laravel
+        - Valores chegam como nulo

@@ -15,7 +15,7 @@ class Marca extends Model
     {
         return [
             'nome' => 'required|string|unique:marcas,nome,' . $marcaId .'|max:140',
-            'imagem' => 'required|string|max:255'
+            'imagem' => $marcaId ? 'nullable' : 'required' . '|file|mimes:png,jpg,jpeg'
         ];
     }
 
