@@ -34,3 +34,5 @@ Route::apiResources([
 - Quando tiver form-data
     - Inputs Não são reconhecidos no framework laravel
         - Valores chegam como nulo
+    - Difinir methodo como post e nos dados enviado, colocar um
+        _method = put 
