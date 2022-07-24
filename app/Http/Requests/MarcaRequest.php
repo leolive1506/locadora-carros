@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Marca;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MarcaRequest extends FormRequest
@@ -23,19 +24,11 @@ class MarcaRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'nome' => 'required|string|max:140',
-            'imagem' => 'required|string|max:255'
-        ];
+        return Marca::rules();
     }
 
     public function messages()
     {
-        return [
-            'nome.required' => 'A title is required',
-            'imagem.required' => 'A imagem não pode ser nula',
-        ];
+        return Marca::messagesValidation();
     }
-
-
 }

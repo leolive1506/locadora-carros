@@ -11,4 +11,19 @@ class Marca extends Model
     protected $table = 'marcas';
     protected $fillable = ['nome', 'imagem'];
 
+    public static function rules()
+    {
+        return [
+            'nome' => 'required|string|max:140',
+            'imagem' => 'required|string|max:255'
+        ];
+    }
+
+    public static function messagesValidation()
+    {
+        return [
+            'nome.required' => 'O titulo não pode ser nulo',
+            'imagem.required' => 'A imagem não pode ser nula',
+        ];
+    }
 }
