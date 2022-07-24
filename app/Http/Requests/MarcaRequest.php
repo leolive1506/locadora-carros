@@ -24,7 +24,7 @@ class MarcaRequest extends FormRequest
      */
     public function rules()
     {
-        return Marca::rules();
+        return Marca::rules($this->marca);
     }
 
     public function messages()

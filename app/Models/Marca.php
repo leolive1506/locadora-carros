@@ -11,10 +11,10 @@ class Marca extends Model
     protected $table = 'marcas';
     protected $fillable = ['nome', 'imagem'];
 
-    public static function rules()
+    public static function rules(int $marcaId = null)
     {
         return [
-            'nome' => 'required|string|max:140',
+            'nome' => 'required|string|unique:marcas,nome,' . $marcaId .'|max:140',
             'imagem' => 'required|string|max:255'
         ];
     }
@@ -23,7 +23,18 @@ class Marca extends Model
     {
         return [
             'nome.required' => 'O titulo não pode ser nulo',
+            'nome.unique' => 'Essa marca já existe',
             'imagem.required' => 'A imagem não pode ser nula',
         ];
+    }
+
+    public function attributes()
+    {
+        return $this;
+    }
+
+    public function model()
+    {
+        return $this;
     }
 }
