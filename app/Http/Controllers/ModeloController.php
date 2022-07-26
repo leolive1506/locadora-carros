@@ -25,8 +25,8 @@ class ModeloController extends ApiController
          * @var \Illuminate\Database\Eloquent\Builder $query
          */
         $query = $this->modelo::query();
-        $columnsModel = $this->modelo->getTableColumns();
-        $columnsLikeModel = $this->modelo->getLikeFiltersPropertys();
+        $columnsModel = $this->modelo->getCommonColumns();
+        $columnsLikeModel = $this->modelo->getLikeColumns();
 
         foreach ($columnsModel as $column) {
             $this->addFilter($column, $request, $query);

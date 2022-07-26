@@ -10,7 +10,7 @@ class Modelo extends ApiModel
     use HasFactory;
     protected $table = 'modelos';
     protected $fillable = ['marca_id', 'nome', 'imagem', 'numero_portas', 'lugares', 'air_bag', 'abs'];
-    protected $likeFiltersPropertys = ['nome'];
+    protected $likeColumns = ['nome'];
 
     // rules
     public static function rules(int $modelo_id = null)

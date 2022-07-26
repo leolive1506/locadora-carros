@@ -5,18 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ApiModel extends Model
+abstract class ApiModel extends Model
 {
     use HasFactory;
-    protected $likeFiltersPropertys;
+    protected $commonColumns = [];
+    protected $likeColumns = [];
 
-    public function getTableColumns()
+    public function getCommonColumns()
     {
-        return array_diff($this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable()), $this->getLikeFiltersPropertys());
+        if (! empty($this->commonColumns)) {
+            return array_diff($this->commonColumns, $this->getLikeColumns());
+        }
+
+        return array_diff($this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable()), $this->getLikeColumns());
     }
 
-    public function getLikeFiltersPropertys()
+    public function getLikeColumns()
     {
-        return $this->likeFiltersPropertys;
+        return $this->likeColumns;
     }
 }
