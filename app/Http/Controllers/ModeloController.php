@@ -25,21 +25,13 @@ class ModeloController extends ApiController
          * @var \Illuminate\Database\Eloquent\Builder $query
          */
         $query = $this->modelo::query();
-        $columnsModel = $this->modelo->getCommonColumns();
-        $columnsLikeModel = $this->modelo->getLikeColumns();
+        // Filtro selecionanod colunas, filtrando pelos campos da tabela
+        $this->defaultSearch($this->modelo, $request, $query);
 
-        foreach ($columnsModel as $column) {
-            $this->addFilter($column, $request, $query);
-        }
-
-        foreach ($columnsLikeModel as $column) {
-            $this->addFilterLike($column, $request, $query);
-        }
-
+        // filter relanthioship
         $filterColumsnMarca = $request['columns_marca'];
         $query->with($filterColumsnMarca ? 'marca:id,' . str_replace(' ', '', $filterColumsnMarca) : 'marca');
 
-        $this->addFilterByColumn($request, $query);
         return $this->getFilter($request, $query);
     }
 

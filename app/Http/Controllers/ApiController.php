@@ -65,4 +65,21 @@ class ApiController extends Controller
 
         return $query->orderBy($orderBy, $direction)->paginate($size);
     }
+
+    public function defaultSearch($model, Request $request, Builder $query)
+    {
+        $columnsModel = $model->getCommonColumns();
+        $columnsLikeModel = $model->getLikeColumns();
+
+        foreach ($columnsModel as $column) {
+            $this->addFilter($column, $request, $query);
+        }
+
+        foreach ($columnsLikeModel as $column) {
+            $this->addFilterLike($column, $request, $query);
+        }
+
+        // filter current column model
+        $this->addFilterByColumn($request, $query);
+    }
 }
