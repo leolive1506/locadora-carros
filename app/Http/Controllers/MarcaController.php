@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MarcaRequest;
 use App\Models\Marca;
 use App\Services\Storage\StorageService;
-
-class MarcaController extends Controller
+use Illuminate\Http\Request;
+class MarcaController extends ApiController
 {
     private $marca;
 
@@ -19,10 +19,19 @@ class MarcaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $marcas = $this->marca::orderBy('id', 'desc')->paginate(20);
-        return $marcas;
+               /**
+         * @var \Illuminate\Database\Eloquent\Builder $query
+         */
+        $query = $this->marca::query();
+        $this->defaultSearch($this->marca, $request, $query);
+
+        // filter relanthioship
+        $filterColumsnModelos = $request['columns_modelos'];
+        $query->with($filterColumsnModelos ? 'modelos:id,marca_id,' . str_replace(' ', '', $filterColumsnModelos) : 'modelos');
+
+        return $this->getFilter($request, $query);
     }
 
     /**

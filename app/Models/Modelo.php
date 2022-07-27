@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Modelo extends Model
+class Modelo extends ApiModel
 {
     use HasFactory;
     protected $table = 'modelos';
     protected $fillable = ['marca_id', 'nome', 'imagem', 'numero_portas', 'lugares', 'air_bag', 'abs'];
+    protected $likeColumns = ['nome'];
 
     // rules
     public static function rules(int $modelo_id = null)

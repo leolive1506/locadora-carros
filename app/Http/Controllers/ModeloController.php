@@ -7,7 +7,7 @@ use App\Models\Modelo;
 use App\Services\Storage\StorageService;
 use Illuminate\Http\Request;
 
-class ModeloController extends Controller
+class ModeloController extends ApiController
 {
     public function __construct(Modelo $modelo)
     {
@@ -19,10 +19,20 @@ class ModeloController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $modelos = $this->modelo::with('marca')->orderBy('id', 'desc')->paginate(20);
-        return $modelos;
+        /**
+         * @var \Illuminate\Database\Eloquent\Builder $query
+         */
+        $query = $this->modelo::query();
+        // Filtro selecionanod colunas, filtrando pelos campos da tabela
+        $this->defaultSearch($this->modelo, $request, $query);
+
+        // filter relanthioship
+        $filterColumsnMarca = $request['columns_marca'];
+        $query->with($filterColumsnMarca ? 'marca:id,' . str_replace(' ', '', $filterColumsnMarca) : 'marca');
+
+        return $this->getFilter($request, $query);
     }
 
     /**
