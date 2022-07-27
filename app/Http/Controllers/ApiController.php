@@ -8,30 +8,6 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
-    protected function addFilterSearch(Request $request, Builder &$query, $with = null)
-    {
-        /**
-         * @var string $columns "id,nome,imagem"
-         * @var string $columnsMarca "id,nome,imagem"
-         * @var string $filters filters=nome:=:Ford Ka
-         *  columns=nome,imagem,lugares&columns_marca=id,nome,imagem&filters=nome:like:Ford%;abs:=:1
-         */
-        $columns = $request->get('columns');
-        $filters = $request->get('filters');
-
-        if (! is_null($columns)) {
-            $columns = str_replace(' ', '', $columns);
-            $query->selectRaw('id,marca_id,' . $columns);
-        }
-
-        if (! is_null($filters)) {
-            $arrayFilters = explode(';', $filters);
-            foreach ($arrayFilters as $filter) {
-                $query->where([explode(':', $filter)]);
-            }
-        }
-    }
-
     protected function addFilterByColumn(Request $request, Builder $query)
     {
         if (! is_null($request['columns'])) {
