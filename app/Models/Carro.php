@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Carro extends Model
+class Carro extends ApiModel
 {
     use HasFactory;
     protected $table = 'carros';
