@@ -21,7 +21,7 @@ class MarcaController extends ApiController
      */
     public function index(Request $request)
     {
-               /**
+        /**
          * @var \Illuminate\Database\Eloquent\Builder $query
          */
         $query = $this->marca::query();

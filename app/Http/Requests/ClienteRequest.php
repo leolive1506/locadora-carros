@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Cliente;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreClienteRequest extends FormRequest
+class ClienteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class StoreClienteRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +24,6 @@ class StoreClienteRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return Cliente::rules();
     }
 }

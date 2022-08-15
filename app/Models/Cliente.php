@@ -3,11 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Cliente extends Model
+class Cliente extends ApiModel
 {
     use HasFactory;
     protected $table = 'clientes';
     protected $fillable = ['nome'];
+    protected $likeColumns = ['nome'];
+
+    public static function rules()
+    {
+        return [
+            'nome' => 'required|max:140',
+        ];
+    }
 }
