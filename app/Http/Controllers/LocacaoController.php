@@ -2,85 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreLocacaoRequest;
-use App\Http\Requests\UpdateLocacaoRequest;
+use Illuminate\Http\Request;
+use App\Http\Requests\LocacaoRequest;
 use App\Models\Locacao;
 
-class LocacaoController extends Controller
+class LocacaoController extends ApiController
 {
+    private $locacao;
+
+    public function __construct(Locacao $locacao)
+    {
+        $this->locacao = $locacao;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        /**
+         * @var \Illuminate\Database\Eloquent\Builder $query
+         */
+        $query = $this->locacao::query();
+        $this->defaultSearch($this->locacao, $request, $query);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        // // filter relanthioship
+        // $filterColumsnModelos = $request['columns_modelos'];
+        // $query->with($filterColumsnModelos ? 'modelos:id,locacao_id,' . str_replace(' ', '', $filterColumsnModelos) : 'modelos');
+
+        return $this->getFilter($request, $query);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreLocacaoRequest  $request
+     * @param  \App\Http\Requests\locacaoRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreLocacaoRequest $request)
+    public function store(LocacaoRequest $request)
     {
-        //
+        $data = $request->all();
+        $data['imagem'] = $request->file('imagem')->store('imagens/locacaos', 'public');
+
+        return $this->locacao::create($data);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Locacao  $locacao
+     * @param  integer $locacao_id
      * @return \Illuminate\Http\Response
      */
-    public function show(Locacao $locacao)
+    public function show($locacao_id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Locacao  $locacao
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Locacao $locacao)
-    {
-        //
+        return $this->locacao->findOrFail($locacao_id);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateLocacaoRequest  $request
-     * @param  \App\Models\Locacao  $locacao
+     * @param  \App\Http\Requests\LocacaoRequest  $request
+     * @param  integer  $locacao_id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateLocacaoRequest $request, Locacao $locacao)
+    public function update(LocacaoRequest $request, $locacao_id)
     {
-        //
+        $locacao = $this->locacao->findOrFail($locacao_id);
+        $locacao->update($request->all());
+
+        return $locacao;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Locacao  $locacao
+     * @param  integer  $locacao_id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Locacao $locacao)
+    public function destroy(int $locacao_id)
     {
-        //
+        $this->locacao->destroy($locacao_id);
+        return ['message' => 'locação removida com sucesso'];
     }
 }
