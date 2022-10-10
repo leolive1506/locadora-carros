@@ -45,3 +45,15 @@ Route::apiResources([
     - Header (cabeçalho)
     - Payload (carga útil)
     - Signature (assinatura)
+
+- Mais utilizado estava com problema ao instalar no laravel 9
+    - https://github.com/tymondesigns/jwt-auth
+- Utlizado no curso
+    - https://github.com/PHP-Open-Source-Saver/jwt-auth
+    - [Docs](https://laravel-jwt-auth.readthedocs.io/en/latest/)
+
+- Comando gerar secret
+```sh
+php artisan jwt:secret
+```
+- Autenticação está em authController
