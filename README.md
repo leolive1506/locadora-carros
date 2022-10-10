@@ -36,3 +36,12 @@ Route::apiResources([
         - Valores chegam como nulo
     - Difinir methodo como post e nos dados enviado, colocar um
         _method = put 
+
+# JWT
+- Cada request é unica
+    - Sem relação com a anterior (sem estato stateless)
+- Gera um token de autorização
+- Constituido por
+    - Header (cabeçalho)
+    - Payload (carga útil)
+    - Signature (assinatura)
